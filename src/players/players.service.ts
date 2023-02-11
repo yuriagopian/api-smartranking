@@ -8,11 +8,13 @@ import { v4 as uuid } from 'uuid';
 export class PlayersService {
   private readonly logger = new Logger(PlayersService.name);
   private players: IPlayer[] = [];
-  createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
+  async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
+
+    await this.create(createPlayersDto);
   }
 
-  private create(createPlayersDto: CreatePlayerDto): IPlayer {
+  private create(createPlayersDto: CreatePlayerDto): void {
     const { email, name, phoneNumber } = createPlayersDto;
 
     const player: IPlayer = {
@@ -24,6 +26,7 @@ export class PlayersService {
       position: 1,
       imageUrl: 'http://foto.com/images/foto.jpg',
     };
-    return player;
+
+    this.players.push(player);
   }
 }
