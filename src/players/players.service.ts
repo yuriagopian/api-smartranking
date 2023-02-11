@@ -9,6 +9,10 @@ export class PlayersService {
   private readonly logger = new Logger(PlayersService.name);
   private players: IPlayer[] = [];
 
+  async listPlayers(): Promise<IPlayer[]> {
+    return this.players;
+  }
+
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
     await this.create(createPlayersDto);

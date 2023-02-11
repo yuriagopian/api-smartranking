@@ -1,4 +1,6 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { runInThisContext } from 'vm';
+import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.sto';
 import { PlayersService } from './players.service';
 
@@ -15,7 +17,9 @@ export class PlayersController {
   removePlayer(id) {}
 
   @Get()
-  listPlayers() {}
+  listPlayers(): Promise<IPlayer[]> {
+    return this.playersService.listPlayers();
+  }
 
   @Get('id')
   getPlayerById(id) {}
