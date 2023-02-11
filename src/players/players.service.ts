@@ -20,10 +20,11 @@ export class PlayersService {
   }
 
   async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
-    const { email } = updatePlayerDto;
+    const { email, name } = updatePlayerDto;
 
     const playerFound = this.players.find((p) => p.email === email);
     if (playerFound) {
+      this.update(playerFound, updatePlayerDto);
     }
   }
 
@@ -41,5 +42,11 @@ export class PlayersService {
     };
 
     this.players.push(player);
+  }
+
+  private update(player, updatePlayerDto: UpdatePlayerDto): void {
+    const { name } = updatePlayerDto;
+
+    player.name = name;
   }
 }
