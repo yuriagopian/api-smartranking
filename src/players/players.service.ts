@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IPlayer } from './domain/player.interface';
-import { CreatePlayerDto } from './dtos/create-player.sto';
+import { CreatePlayerDto } from './dtos/create-player.dto';
 
 import { v4 as uuid } from 'uuid';
+import { UpdatePlayerDto } from './dtos/update-player.dto';
 
 @Injectable()
 export class PlayersService {
@@ -16,6 +17,14 @@ export class PlayersService {
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
     await this.create(createPlayersDto);
+  }
+
+  async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
+    const { email } = updatePlayerDto;
+
+    const playerFound = this.players.find((p) => p.email === email);
+    if (playerFound) {
+    }
   }
 
   private create(createPlayersDto: CreatePlayerDto): void {
