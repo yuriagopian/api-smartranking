@@ -20,6 +20,9 @@ export class PlayersService {
       name,
       phoneNumber,
       email,
+      ranking: 'A',
+      position: 1,
+      imageUrl: 'http://foto.com/images/foto.jpg',
     };
     return player;
   }
