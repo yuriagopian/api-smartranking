@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -34,10 +35,14 @@ export class PlayersController {
     return this.playersService.listPlayers();
   }
 
-  @Get()
+  @Get('')
   getPlayerByEmail(@Query('email') email: string) {
     return this.playersService.getPlayerByEmail(email);
   }
+  // @Get(':email')
+  // getPlayerByEmail(@Param('email') email: string) {
+  //   return this.playersService.getPlayerByEmail(email);
+  // }
 
   // @Get()
   // getPlayers(@Query('email') email: string): Promise<IPlayer[] | IPlayer> {
