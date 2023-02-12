@@ -28,7 +28,9 @@ export class PlayersController {
   }
 
   @Delete()
-  removePlayer(id) {}
+  removePlayer(@Param('email') email: string) {
+    return this.playersService.deletePlayer(email);
+  }
 
   @Get()
   listPlayers(): Promise<IPlayer[]> {

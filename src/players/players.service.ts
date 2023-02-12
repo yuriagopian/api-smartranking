@@ -37,6 +37,12 @@ export class PlayersService {
     }
   }
 
+  async deletePlayer(email: string): Promise<void> {
+    const player = await this.players.find((player) => player.email === email);
+
+    this.players = this.players.filter((p) => p.email !== email);
+  }
+
   private create(createPlayersDto: CreatePlayerDto): void {
     const { email, name, phoneNumber } = createPlayersDto;
 
