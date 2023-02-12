@@ -25,7 +25,7 @@ export class PlayersService {
 
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
-    await this.create(createPlayersDto);
+    this.create(createPlayersDto);
   }
 
   async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
@@ -38,7 +38,7 @@ export class PlayersService {
   }
 
   async deletePlayer(email: string): Promise<void> {
-    const player = await this.players.find((player) => player.email === email);
+    const player = this.players.find((player) => player.email === email);
 
     this.players = this.players.filter((p) => p.email !== email);
   }
