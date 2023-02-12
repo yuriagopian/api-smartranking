@@ -7,7 +7,6 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { runInThisContext } from 'vm';
 import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
@@ -39,4 +38,13 @@ export class PlayersController {
   getPlayerByEmail(@Query('email') email: string) {
     return this.playersService.getPlayerByEmail(email);
   }
+
+  // @Get()
+  // getPlayers(@Query('email') email: string): Promise<IPlayer[] | IPlayer> {
+  //   if (email) {
+  //     return this.playersService.getPlayerByEmail(email);
+  //   } else {
+  //     return this.playersService.listPlayers();
+  //   }
+  // }
 }
