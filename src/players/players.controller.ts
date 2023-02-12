@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { runInThisContext } from 'vm';
 import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
@@ -27,6 +35,8 @@ export class PlayersController {
     return this.playersService.listPlayers();
   }
 
-  @Get('id')
-  getPlayerById(id) {}
+  @Get()
+  getPlayerByEmail(@Query('email') email: string) {
+    return this.playersService.getPlayerByEmail(email);
+  }
 }

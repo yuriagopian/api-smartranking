@@ -13,6 +13,9 @@ export class PlayersService {
   async listPlayers(): Promise<IPlayer[]> {
     return this.players;
   }
+  async getPlayerByEmail(email: string): Promise<IPlayer> {
+    return this.players.find((player) => player.email === email);
+  }
 
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
