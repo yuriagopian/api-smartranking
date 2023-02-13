@@ -42,6 +42,7 @@ export class PlayersService {
 
     this.players = this.players.filter((p) => p.email !== email);
   }
+  // mongodb+srv://dev:8zmeMI1Rj1UfmWWQ@cluster0.mnc4s.mongodb.net/test
 
   private create(createPlayersDto: CreatePlayerDto): void {
     const { email, name, phoneNumber } = createPlayersDto;
