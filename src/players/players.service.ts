@@ -30,7 +30,7 @@ export class PlayersService {
 
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
-    this.playersModel.create(createPlayersDto);
+    this.create(createPlayersDto);
   }
 
   async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
@@ -60,7 +60,7 @@ export class PlayersService {
       imageUrl: 'http://foto.com/images/foto.jpg',
     };
 
-    // this.players.push(player);
+    this.playersModel.create(player);
   }
 
   private update(player, updatePlayerDto: UpdatePlayerDto): void {
