@@ -5,12 +5,10 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-@ValidatorConstraint({ async: true })
+@ValidatorConstraint({ async: false })
 export class IsEmailPassed implements ValidatorConstraintInterface {
   validate(email: string) {
-    if (email) {
-      return false;
-    }
+    return !email;
   }
 }
 

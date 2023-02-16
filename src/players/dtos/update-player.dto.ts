@@ -8,12 +8,12 @@ import {
   Allow,
   ValidateIf,
 } from 'class-validator';
-import { CreatePlayerDto } from './create-player.dto';
 import {
   IsEmailPassed,
   EmailCanNotBeUpdated,
-} from '../validations/email-can-not-be-updated';
+} from '../validations/email-can-not-be-updated.rule';
 
+// import { CreatePlayerDto } from './create-player.dto';
 // export class UpdatePlayerDto extends PartialType(CreatePlayerDto) {}
 export class UpdatePlayerDto {
   @IsString()
@@ -28,6 +28,6 @@ export class UpdatePlayerDto {
   @MaxLength(256)
   readonly name: string;
 
-  @EmailCanNotBeUpdated({ message: 'The field Email Cannot be changed' })
+  @EmailCanNotBeUpdated({ message: 'The field "email" Cannot be changed' })
   email: string;
 }
