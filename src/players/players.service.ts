@@ -49,7 +49,7 @@ export class PlayersService {
     const { email } = updatePlayerDto;
     const playerFound = await this.getPlayerByEmail(email);
     if (playerFound) {
-      this.playersModel.updateOne({ email }, updatePlayerDto);
+      await this.playersModel.findOneAndUpdate({ email }, updatePlayerDto);
     }
   }
 
