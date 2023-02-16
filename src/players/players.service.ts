@@ -44,7 +44,7 @@ export class PlayersService {
     return player;
   }
 
-  async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
+  async createPlayer(createPlayersDto: CreatePlayerDto): Promise<IPlayer> {
     const { email } = createPlayersDto;
     this.logger.log(`create player dto: ${createPlayersDto}`);
     const playerFound = await this.playersModel.findOne({ email });
@@ -53,7 +53,7 @@ export class PlayersService {
         `The User With email ${email} already exists`,
       );
     }
-    this.create(createPlayersDto);
+    return await this.create(createPlayersDto);
   }
 
   // async updatePlayer(id, updatePlayerDto: UpdatePlayerDto): Promise<void> {

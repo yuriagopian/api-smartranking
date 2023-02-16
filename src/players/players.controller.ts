@@ -19,7 +19,9 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
   @Post()
-  async createPlayer(@Body() createPlayerDto: CreatePlayerDto) {
+  async createPlayer(
+    @Body() createPlayerDto: CreatePlayerDto,
+  ): Promise<IPlayer> {
     return await this.playersService.createPlayer(createPlayerDto);
   }
 
@@ -39,6 +41,10 @@ export class PlayersController {
   @Delete(':email')
   removePlayer(@Param('email', PlayersValidationParamsPipe) email: string) {
     return this.playersService.deletePlayer(email);
+  }
+  @Delete(':id')
+  removePlayerById(@Param('id', PlayersValidationParamsPipe) id: string) {
+    return this.playersService.deletePlayerById(id);
   }
 
   @Get()
