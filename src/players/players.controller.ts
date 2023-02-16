@@ -23,9 +23,17 @@ export class PlayersController {
     return await this.playersService.createPlayer(createPlayerDto);
   }
 
-  @Patch()
-  updatePlayer(@Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playersService.updatePlayer(updatePlayerDto);
+  // @Patch()
+  // updatePlayer(@Body() updatePlayerDto: UpdatePlayerDto) {
+  //   return this.playersService.updatePlayer(updatePlayerDto);
+  // }
+
+  @Patch('/:id')
+  updatePlayer(
+    @Param('id', PlayersValidationParamsPipe) id: string,
+    @Body() updatePlayerDto: UpdatePlayerDto,
+  ): Promise<void> {
+    return this.playersService.updatePlayer(id, updatePlayerDto);
   }
 
   @Delete(':email')

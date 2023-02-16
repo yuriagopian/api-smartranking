@@ -56,11 +56,18 @@ export class PlayersService {
     this.create(createPlayersDto);
   }
 
-  async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
-    const { email } = updatePlayerDto;
-    const playerFound = await this.getPlayerByEmail(email);
+  // async updatePlayer(id, updatePlayerDto: UpdatePlayerDto): Promise<void> {
+  //   const { email } = updatePlayerDto;
+  //   const playerFound = await this.getPlayerByEmail(email);
+  //   if (playerFound) {
+  //     await this.playersModel.findOneAndUpdate({ email }, updatePlayerDto);
+  //   }
+  // }
+
+  async updatePlayer(id, updatePlayerDto: UpdatePlayerDto): Promise<void> {
+    const playerFound = await this.playersModel.findOne({ _id: id });
     if (playerFound) {
-      await this.playersModel.findOneAndUpdate({ email }, updatePlayerDto);
+      await this.playersModel.findOneAndUpdate({ _id: id }, updatePlayerDto);
     }
   }
 
