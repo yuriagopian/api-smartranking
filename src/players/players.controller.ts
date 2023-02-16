@@ -38,8 +38,8 @@ export class PlayersController {
     return this.playersService.listPlayers();
   }
 
-  @Get('')
-  getPlayerByEmail(@Query('email') email: string) {
+  @Get()
+  getPlayerByEmail(@Query('email', PlayersValidationParamsPipe) email: string) {
     return this.playersService.getPlayerByEmail(email);
   }
   // @Get(':email')
