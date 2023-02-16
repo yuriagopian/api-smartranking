@@ -62,7 +62,9 @@ export class PlayersService {
     await this.playersModel.deleteOne({ email });
   }
 
-  private create(createPlayersDto: CreatePlayerDto): void {
+  private async create(createPlayersDto: CreatePlayerDto): Promise<IPlayer> {
+    const playerCreated = new this.playersModel(createPlayersDto);
+    return await playerCreated.save();
     const { email, name, phoneNumber } = createPlayersDto;
 
     const player = {
