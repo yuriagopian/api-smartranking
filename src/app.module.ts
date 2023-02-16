@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PlayersModule } from './players/players.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://dev:8zmeMI1Rj1UfmWWQ@cluster0.mnc4s.mongodb.net/smart-ranking',
-      {
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get('MONGO_DB_URI'),
         useNewUrlParser: true,
-        useCreateIndex: true,
         useUnifiedTopology: true,
-        useFindAndModify: false,
-      },
-    ),
+      }),
+    }),
     PlayersModule,
   ],
   controllers: [],
