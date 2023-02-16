@@ -1,14 +1,19 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
-
 import { v4 as uuid } from 'uuid';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class PlayersService {
   private readonly logger = new Logger(PlayersService.name);
   private players: IPlayer[] = [];
+  constructor(
+    @InjectModel('Player')
+    private readonly playersModel: Model<IPlayer>,
+  ) {}
 
   async listPlayers(): Promise<IPlayer[]> {
     return this.players;
@@ -25,7 +30,7 @@ export class PlayersService {
 
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
     this.logger.log(`create player dto: ${createPlayersDto}`);
-    this.create(createPlayersDto);
+    this.playersModel.create(createPlayersDto);
   }
 
   async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
@@ -46,8 +51,7 @@ export class PlayersService {
   private create(createPlayersDto: CreatePlayerDto): void {
     const { email, name, phoneNumber } = createPlayersDto;
 
-    const player: IPlayer = {
-      _id: uuid(),
+    const player = {
       name,
       phoneNumber,
       email,
@@ -56,7 +60,7 @@ export class PlayersService {
       imageUrl: 'http://foto.com/images/foto.jpg',
     };
 
-    this.players.push(player);
+    // this.players.push(player);
   }
 
   private update(player, updatePlayerDto: UpdatePlayerDto): void {
