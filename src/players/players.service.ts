@@ -23,11 +23,22 @@ export class PlayersService {
   async listPlayers(): Promise<IPlayer[]> {
     return this.playersModel.find();
   }
+
   async getPlayerByEmail(email: string): Promise<IPlayer> {
     const player = this.playersModel.findOne({ email });
 
     if (!player) {
       throw new NotFoundException(`Player with email ${email} not fount`);
+    }
+
+    return player;
+  }
+
+  async getPlayerById(id: string): Promise<IPlayer> {
+    const player = this.playersModel.findOne({ _id: id });
+
+    if (!player) {
+      throw new NotFoundException(`Player with id ${id} not fount`);
     }
 
     return player;
