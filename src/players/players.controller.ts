@@ -45,12 +45,8 @@ export class PlayersController {
 
   @Get('/:_id')
   getPlayerByEmail(@Param('_id') id: string) {
-    return this.playersService.getPlayerByEmail(id);
+    return this.playersService.getPlayerById(id);
   }
-  // @Get(':email')
-  // getPlayerByEmail(@Param('email') email: string) {
-  //   return this.playersService.getPlayerByEmail(email);
-  // }
 
   // @Get()
   // getPlayers(@Query('email') email: string): Promise<IPlayer[] | IPlayer> {
