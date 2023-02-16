@@ -27,7 +27,7 @@ export class PlayersController {
     return this.playersService.updatePlayer(updatePlayerDto);
   }
 
-  @Delete()
+  @Delete(':email')
   removePlayer(@Param('email') email: string) {
     return this.playersService.deletePlayer(email);
   }

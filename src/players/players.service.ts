@@ -14,7 +14,7 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class PlayersService {
   private readonly logger = new Logger(PlayersService.name);
-  private players: IPlayer[] = [];
+
   constructor(
     @InjectModel('Player')
     private readonly playersModel: Model<IPlayer>,
@@ -54,7 +54,7 @@ export class PlayersService {
   }
 
   async deletePlayer(email: string): Promise<void> {
-    const player = this.getPlayerByEmail(email);
+    const player = await this.getPlayerByEmail(email);
     if (!player) {
       throw new NotFoundException(`Player with email ${email} not found`);
     }
