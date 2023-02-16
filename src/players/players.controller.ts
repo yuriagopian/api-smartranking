@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
@@ -30,7 +32,8 @@ export class PlayersController {
   //   return this.playersService.updatePlayer(updatePlayerDto);
   // }
 
-  @Patch('/:id')
+  @Patch(':id')
+  // @UsePipes(ParseUUIDPipe)
   updatePlayer(
     @Param('id', PlayersValidationParamsPipe) id: string,
     @Body() updatePlayerDto: UpdatePlayerDto,

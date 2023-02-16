@@ -7,9 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
+      whitelist: true, // Só sera passado adiante o que estiver maepado
       transform: true,
-      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      forbidNonWhitelisted: true, // Se alguma propriedade naõ foi listada e esta sendo passda dispara erro
     }),
   );
   await app.listen(3000);
