@@ -1,4 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
+import { CreateCategoryDto } from './dtos/create-category.dto';
 
-@Controller('categories')
-export class CategoriesController {}
+@Controller('api/v1/categories')
+export class CategoriesController {
+  constructor(private readonly categoriesService) {}
+
+  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {}
+}
