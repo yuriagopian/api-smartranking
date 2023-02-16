@@ -12,6 +12,7 @@ import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { PlayersService } from './players.service';
+import { PlayersValidationParamsPipe } from './pipes/players-validation-params.pipe';
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -28,7 +29,7 @@ export class PlayersController {
   }
 
   @Delete(':email')
-  removePlayer(@Param('email') email: string) {
+  removePlayer(@Param('email', PlayersValidationParamsPipe) email: string) {
     return this.playersService.deletePlayer(email);
   }
 
