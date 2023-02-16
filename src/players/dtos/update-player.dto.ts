@@ -5,9 +5,14 @@ import {
   IsNotEmpty,
   MinLength,
   MaxLength,
-  IsEmail,
+  Allow,
+  ValidateIf,
 } from 'class-validator';
 import { CreatePlayerDto } from './create-player.dto';
+import {
+  IsEmailPassed,
+  EmailCanNotBeUpdated,
+} from '../validations/email-can-not-be-updated';
 
 // export class UpdatePlayerDto extends PartialType(CreatePlayerDto) {}
 export class UpdatePlayerDto {
@@ -17,13 +22,12 @@ export class UpdatePlayerDto {
   @MaxLength(13)
   readonly phoneNumber: string;
 
-  @IsEmail(undefined)
-  @IsNotEmpty()
-  readonly email: string;
-
   @IsString()
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(256)
   readonly name: string;
+
+  @EmailCanNotBeUpdated({ message: 'The field Email Cannot be changed' })
+  email: string;
 }
