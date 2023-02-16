@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { IPlayer } from './domain/player.interface';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { v4 as uuid } from 'uuid';
@@ -16,36 +21,45 @@ export class PlayersService {
   ) {}
 
   async listPlayers(): Promise<IPlayer[]> {
-    return this.players;
+    return this.playersModel.find();
   }
   async getPlayerByEmail(email: string): Promise<IPlayer> {
-    const player = this.players.find((player) => player.email === email);
+    const player = this.playersModel.findOne({ email });
 
     if (!player) {
-      throw new NotFoundException(`Player tiwh email ${email} not fount`);
+      throw new NotFoundException(`Player with email ${email} not fount`);
     }
 
     return player;
   }
 
   async createPlayer(createPlayersDto: CreatePlayerDto): Promise<void> {
+    const { email } = createPlayersDto;
     this.logger.log(`create player dto: ${createPlayersDto}`);
+    const playerFound = await this.playersModel.findOne({ email });
+    if (playerFound) {
+      throw new ConflictException(
+        `The User With email ${email} already exists`,
+      );
+    }
     this.create(createPlayersDto);
   }
 
   async updatePlayer(updatePlayerDto: UpdatePlayerDto): Promise<void> {
-    const { email, name } = updatePlayerDto;
-
-    const playerFound = this.players.find((p) => p.email === email);
+    const { email } = updatePlayerDto;
+    const playerFound = await this.getPlayerByEmail(email);
     if (playerFound) {
-      this.update(playerFound, updatePlayerDto);
+      this.playersModel.updateOne({ email }, updatePlayerDto);
     }
   }
 
   async deletePlayer(email: string): Promise<void> {
-    const player = this.players.find((player) => player.email === email);
+    const player = this.getPlayerByEmail(email);
+    if (!player) {
+      throw new NotFoundException(`Player with email ${email} not found`);
+    }
 
-    this.players = this.players.filter((p) => p.email !== email);
+    await this.playersModel.deleteOne({ email });
   }
 
   private create(createPlayersDto: CreatePlayerDto): void {
@@ -61,11 +75,5 @@ export class PlayersService {
     };
 
     this.playersModel.create(player);
-  }
-
-  private update(player, updatePlayerDto: UpdatePlayerDto): void {
-    const { name } = updatePlayerDto;
-
-    player.name = name;
   }
 }

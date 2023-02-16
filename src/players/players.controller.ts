@@ -18,8 +18,8 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
   @Post()
-  createPlayer(@Body() createPlayerDto: CreatePlayerDto) {
-    return this.playersService.createPlayer(createPlayerDto);
+  async createPlayer(@Body() createPlayerDto: CreatePlayerDto) {
+    return await this.playersService.createPlayer(createPlayerDto);
   }
 
   @Patch()
