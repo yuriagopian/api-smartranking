@@ -80,6 +80,15 @@ export class PlayersService {
     await this.playersModel.deleteOne({ email });
   }
 
+  async deletePlayerById(id: string): Promise<void> {
+    const player = await this.playersModel.findOne({ _id: id });
+    if (!player) {
+      throw new NotFoundException(`Player with id ${id} not found`);
+    }
+
+    await this.playersModel.deleteOne({ _id: id });
+  }
+
   private async create(createPlayersDto: CreatePlayerDto): Promise<IPlayer> {
     const playerCreated = new this.playersModel(createPlayersDto);
     return await playerCreated.save();
