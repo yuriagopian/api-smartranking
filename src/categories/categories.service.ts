@@ -46,6 +46,13 @@ export class CategoriesService {
     );
   }
 
+  async assignCategoryToPlayer(
+    categoryId: string,
+    playerId: string,
+  ): Promise<void> {
+    console.log(categoryId, playerId);
+  }
+
   async listCategories(): Promise<ICategory[]> {
     return await this.categoriesModel.find();
   }

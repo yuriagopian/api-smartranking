@@ -44,5 +44,10 @@ export class CategoriesController {
   }
 
   @Post(':categoryId/player/:playerId')
-  async assignCategoryToPlayer() {}
+  async assignCategoryToPlayer(
+    @Param('categoryId') categoryId: string,
+    @Param('playerId') playerId: string,
+  ) {
+    return this.categoriesService.assignCategoryToPlayer(categoryId, playerId);
+  }
 }
