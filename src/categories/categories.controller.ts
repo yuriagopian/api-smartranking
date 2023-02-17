@@ -28,7 +28,7 @@ export class CategoriesController {
     return this.categoriesService.listCategories();
   }
 
-  @Get()
+  @Get('id')
   async getCategory(@Param('id') id: string): Promise<ICategory> {
     return this.categoriesService.getCategory(id);
   }
