@@ -48,6 +48,9 @@ export class CategoriesController {
     @Param('categoryId') categoryId: string,
     @Param('playerId') playerId: string,
   ) {
-    return this.categoriesService.assignCategoryToPlayer(categoryId, playerId);
+    return await this.categoriesService.assignCategoryToPlayer(
+      categoryId,
+      playerId,
+    );
   }
 }
