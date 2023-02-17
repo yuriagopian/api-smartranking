@@ -33,7 +33,7 @@ export class CategoriesService {
     return await this.categoriesModel.find();
   }
 
-  async getCategory(id: number): Promise<ICategory> {
+  async getCategory(id: string): Promise<ICategory> {
     return await this.categoriesModel.findOne({ category: id });
   }
 
