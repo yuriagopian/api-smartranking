@@ -19,7 +19,9 @@ export class CategoriesService {
     const foundCategory = await this.categoriesModel.findOne({ category });
 
     if (foundCategory) {
-      throw new ConflictException('');
+      throw new ConflictException(
+        `Category with id ${category} already registered`,
+      );
     }
     return await this.categoriesModel.create(createCategoryDto);
   }
