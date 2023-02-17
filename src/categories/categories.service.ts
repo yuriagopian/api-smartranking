@@ -50,7 +50,9 @@ export class CategoriesService {
     categoryId: string,
     playerId: string,
   ): Promise<void> {
-    console.log(categoryId, playerId);
+    await this.getCategory(categoryId);
+
+    // const playerFound = await this.
   }
 
   async listCategories(): Promise<ICategory[]> {
