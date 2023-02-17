@@ -23,7 +23,10 @@ export class CategoriesService {
         `Category with id ${category} already registered`,
       );
     }
-    return await this.categoriesModel.create(createCategoryDto);
+
+    const createCategory = new this.categoriesModel(createCategoryDto);
+
+    return await createCategory.save();
   }
 
   async listCategories() {}
