@@ -1,9 +1,23 @@
-import { Body, Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { CategoriesService } from './categories.service';
+import { ICategory } from './domains/category.interface';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @Controller('api/v1/categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
 
-  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {}
+  @Post()
+  @UsePipes(ValidationPipe)
+  async createCategory(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<ICategory> {
+    return await this.categoriesService.createCategory(createCategoryDto);
+  }
 }
