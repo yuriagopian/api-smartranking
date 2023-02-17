@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ICategory } from './domains/category.interface';
+import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -10,5 +11,9 @@ export class CategoriesService {
     private readonly categoriesModel: Model<ICategory>,
   ) {}
 
-  createCategory() {}
+  async createCategory(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<ICategory> {
+    return await this.categoriesModel.create(createCategoryDto);
+  }
 }
