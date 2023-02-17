@@ -1,5 +1,5 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
-import { CategoryEvent } from '../domains/category.interface';
+import { CategoryEvent } from '../domain/category.interface';
 
 export class CreateCategoryDto {
   @IsString()
