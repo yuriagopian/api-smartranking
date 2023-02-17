@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ICategory } from './domains/category.interface';
@@ -40,7 +44,12 @@ export class CategoriesService {
   }
 
   async getCategory(id: string): Promise<ICategory> {
-    return await this.categoriesModel.findOne({ category: id });
+    const categoryFound = await this.categoriesModel.findOne({ category: id });
+
+    if (!categoryFound) {
+      throw new NotFoundException(`Category with id ${id} not found`);
+    }
+    return categoryFound;
   }
 
   async deleteCategory(id: number): Promise<void> {}
