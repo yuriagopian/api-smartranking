@@ -42,4 +42,7 @@ export class CategoriesController {
   async getCategory(@Param('id') id: string): Promise<ICategory> {
     return this.categoriesService.getCategory(id);
   }
+
+  @Post()
+  async assignCategoryToPlayer() {}
 }
