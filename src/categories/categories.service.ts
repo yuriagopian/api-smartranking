@@ -30,11 +30,11 @@ export class CategoriesService {
   }
 
   async listCategories(): Promise<ICategory[]> {
-    return this.categoriesModel.find();
+    return await this.categoriesModel.find();
   }
 
   async getCategory(id: number): Promise<ICategory> {
-    return;
+    return await this.categoriesModel.findOne({ category: id });
   }
 
   async deleteCategory(id: number): Promise<void> {}
