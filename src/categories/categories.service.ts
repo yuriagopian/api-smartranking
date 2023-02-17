@@ -16,4 +16,12 @@ export class CategoriesService {
   ): Promise<ICategory> {
     return await this.categoriesModel.create(createCategoryDto);
   }
+
+  async listCategories() {}
+
+  async getCategory(id: number): Promise<ICategory> {
+    return;
+  }
+
+  async deleteCategory(id: number): Promise<void> {}
 }
