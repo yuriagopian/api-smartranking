@@ -37,7 +37,14 @@ export class CategoriesService {
   async updateCategory(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<void> {}
+  ): Promise<void> {
+    await this.getCategory(id);
+
+    await this.categoriesModel.findOneAndUpdate(
+      { category: id },
+      updateCategoryDto,
+    );
+  }
 
   async listCategories(): Promise<ICategory[]> {
     return await this.categoriesModel.find();
