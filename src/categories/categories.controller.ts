@@ -43,6 +43,6 @@ export class CategoriesController {
     return this.categoriesService.getCategory(id);
   }
 
-  @Post()
+  @Post(':categoryId/player/:playerId')
   async assignCategoryToPlayer() {}
 }
