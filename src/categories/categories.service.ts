@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, Schema, Types, ObjectId, Mongoose } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { PlayersService } from 'src/players/players.service';
 import { ICategory } from './domain/category.interface';
 import { CreateCategoryDto } from './dtos/create-category.dto';
