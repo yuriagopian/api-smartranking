@@ -86,7 +86,7 @@ export class CategoriesService {
   }
 
   async listCategories(): Promise<Category[]> {
-    return await this.categoriesModel.find().populate('players').exec();
+    return await this.categoriesModel.find().populate('players');
   }
 
   async getCategory(id: string): Promise<Category> {
