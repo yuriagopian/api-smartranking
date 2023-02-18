@@ -1,10 +1,11 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema, Types, ObjectId, Mongoose } from 'mongoose';
 import { PlayersService } from 'src/players/players.service';
 import { ICategory } from './domain/category.interface';
 import { CreateCategoryDto } from './dtos/create-category.dto';
@@ -52,22 +53,40 @@ export class CategoriesService {
     categoryId: string,
     playerId: string,
   ): Promise<void> {
-    const categoryFound = await this.categoriesModel
-      .findOne({
+    const categoryFound = await this.categoriesModel.findOne({
+      category: categoryId,
+    });
+
+    const playerAlreadyRegisteredAtCategory = await this.categoriesModel
+      .find({
         category: categoryId,
       })
-      .exec();
+      .where('players')
+      .in([playerId]);
 
-    categoryFound.players.push(new Schema.Types.ObjectId(playerId));
+    await this.playersService.getPlayerById(playerId);
 
-    // const playerFound = await this.
+    if (!categoryFound) {
+      throw new BadRequestException(`Category ${categoryId} not registered!`);
+    }
+
+    if (playerAlreadyRegisteredAtCategory.length > 0) {
+      throw new BadRequestException(
+        `Player ${playerId} already registered at category ${categoryId}!`,
+      );
+    }
+
+    const id = new mongoose.Types.ObjectId(playerId);
+    categoryFound.players.push(id);
+
+    await this.categoriesModel.findOneAndUpdate(
+      { category: categoryId },
+      categoryFound,
+    );
   }
 
   async listCategories(): Promise<Category[]> {
-    return await this.categoriesModel
-      .find()
-      .populate([{ path: 'players', model: 'player' }])
-      .exec();
+    return await this.categoriesModel.find().populate('players').exec();
   }
 
   async getCategory(id: string): Promise<Category> {

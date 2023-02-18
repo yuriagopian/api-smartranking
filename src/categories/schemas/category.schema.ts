@@ -34,7 +34,7 @@ export class Category {
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: Player.name }],
   })
-  players: [mongoose.Schema.Types.ObjectId];
+  players: mongoose.Types.ObjectId[];
 }
 
 export const categorySchema = SchemaFactory.createForClass(Category);
