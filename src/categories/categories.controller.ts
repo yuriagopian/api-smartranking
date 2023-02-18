@@ -12,6 +12,7 @@ import { CategoriesService } from './categories.service';
 import { ICategory } from './domain/category.interface';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
+import { Category } from './schemas/category.schema';
 
 @Controller('api/v1/categories')
 export class CategoriesController {
@@ -21,7 +22,7 @@ export class CategoriesController {
   @UsePipes(ValidationPipe)
   async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
-  ): Promise<ICategory> {
+  ): Promise<Category> {
     return await this.categoriesService.createCategory(createCategoryDto);
   }
 
@@ -34,12 +35,12 @@ export class CategoriesController {
   }
 
   @Get()
-  async listCategories(): Promise<ICategory[]> {
+  async listCategories(): Promise<Category[]> {
     return this.categoriesService.listCategories();
   }
 
   @Get(':id')
-  async getCategory(@Param('id') id: string): Promise<ICategory> {
+  async getCategory(@Param('id') id: string): Promise<Category> {
     return this.categoriesService.getCategory(id);
   }
 

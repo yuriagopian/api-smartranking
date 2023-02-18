@@ -4,21 +4,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
+import { PlayersService } from 'src/players/players.service';
 import { ICategory } from './domain/category.interface';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
+import { CategoryDocument, Category } from './schemas/category.schema';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectModel('Category')
-    private readonly categoriesModel: Model<ICategory>,
+    private readonly categoriesModel: Model<CategoryDocument>,
+    private readonly playersService: PlayersService,
   ) {}
 
   async createCategory(
     createCategoryDto: CreateCategoryDto,
-  ): Promise<ICategory> {
+  ): Promise<Category> {
     const { category } = createCategoryDto;
 
     const foundCategory = await this.categoriesModel.findOne({ category });
@@ -29,9 +32,9 @@ export class CategoriesService {
       );
     }
 
-    const createCategory = new this.categoriesModel(createCategoryDto);
+    const createCategory = await this.categoriesModel.create(createCategoryDto);
 
-    return await createCategory.save();
+    return createCategory;
   }
 
   async updateCategory(
@@ -50,16 +53,25 @@ export class CategoriesService {
     categoryId: string,
     playerId: string,
   ): Promise<void> {
-    await this.getCategory(categoryId);
+    const categoryFound = await this.categoriesModel
+      .findOne({
+        category: categoryId,
+      })
+      .exec();
+
+    categoryFound.players.push(new Schema.Types.ObjectId(playerId));
 
     // const playerFound = await this.
   }
 
-  async listCategories(): Promise<ICategory[]> {
-    return await this.categoriesModel.find();
+  async listCategories(): Promise<Category[]> {
+    return await this.categoriesModel
+      .find()
+      .populate([{ path: 'players', model: 'player' }])
+      .exec();
   }
 
-  async getCategory(id: string): Promise<ICategory> {
+  async getCategory(id: string): Promise<Category> {
     const categoryFound = await this.categoriesModel.findOne({ category: id });
 
     if (!categoryFound) {
