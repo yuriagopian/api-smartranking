@@ -33,8 +33,7 @@ export class CategoriesService {
     }
 
     const createCategory = await this.categoriesModel.create(createCategoryDto);
-
-    return createCategory;
+    return await createCategory.save();
   }
 
   async updateCategory(
