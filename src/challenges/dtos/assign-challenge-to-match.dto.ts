@@ -1,11 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
-import { Resultado } from '../interfaces/desafio.interface';
-import { Jogador } from '../../jogadores/interfaces/jogador.interface';
+import { Player } from 'src/players/schema/players.schema';
+import { Result } from '../interfaces/challenge.interface';
 
 export class AtribuirDesafioPartidaDto {
   @IsNotEmpty()
-  def: Jogador;
+  def: Player;
 
   @IsNotEmpty()
-  resultado: Array<Resultado>;
+  resultado: Array<Result>;
 }
