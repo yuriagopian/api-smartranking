@@ -27,12 +27,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     this.logger.error(
       `Http Status: ${status} Error message: ${JSON.stringify(message)} `,
     );
+
     response.status(statusCode).json({
       timestamp: new Date().toISOString(),
       path: request.url,
       error: message,
     });
 
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 }
