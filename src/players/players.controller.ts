@@ -15,6 +15,7 @@ import { CreatePlayerDto } from './dtos/create-player.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { PlayersService } from './players.service';
 import { PlayersValidationParamsPipe } from './pipes/players-validation-params.pipe';
+import { ValidationParamsPipe } from 'src/common/pipes/validation-params.pipe';
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -35,18 +36,18 @@ export class PlayersController {
   @Patch(':id')
   // @UsePipes(ParseUUIDPipe)
   updatePlayer(
-    @Param('id', PlayersValidationParamsPipe) id: string,
+    @Param('id', ValidationParamsPipe) id: string,
     @Body() updatePlayerDto: UpdatePlayerDto,
   ): Promise<void> {
     return this.playersService.updatePlayer(id, updatePlayerDto);
   }
 
   @Delete(':email')
-  removePlayer(@Param('email', PlayersValidationParamsPipe) email: string) {
+  removePlayer(@Param('email', ValidationParamsPipe) email: string) {
     return this.playersService.deletePlayer(email);
   }
   @Delete(':id')
-  removePlayerById(@Param('id', PlayersValidationParamsPipe) id: string) {
+  removePlayerById(@Param('id', ValidationParamsPipe) id: string) {
     return this.playersService.deletePlayerById(id);
   }
 
