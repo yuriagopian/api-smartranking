@@ -3,10 +3,10 @@ import { Player } from 'src/players/schema/players.schema';
 import { ChallengeStatus } from './challenge-status.enum';
 
 export interface Desafio extends Document {
-  datetimeChallenge: Date;
+  dateTimeChallenge: Date;
   status: ChallengeStatus;
-  datetimeRequest: Date;
-  datetimeResponse: Date;
+  dateTimeRequest: Date;
+  dateTimeResponse: Date;
   requester: Player;
   category: string;
   players: Array<Player>;
