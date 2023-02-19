@@ -28,11 +28,6 @@ export class PlayersController {
     return await this.playersService.createPlayer(createPlayerDto);
   }
 
-  // @Patch()
-  // updatePlayer(@Body() updatePlayerDto: UpdatePlayerDto) {
-  //   return this.playersService.updatePlayer(updatePlayerDto);
-  // }
-
   @Patch(':id')
   // @UsePipes(ParseUUIDPipe)
   updatePlayer(
