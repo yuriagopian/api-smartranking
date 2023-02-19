@@ -1,5 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { Player } from 'src/players/schema/players.schema';
+import { Match } from './match.schema';
 
 export type ChallengeDocument = HydratedDocument<Challenge>;
 
@@ -29,3 +31,5 @@ export class Challenge {
   @Prop()
   matches: Match;
 }
+
+export const challengeSchema = SchemaFactory.createForClass(Challenge);
