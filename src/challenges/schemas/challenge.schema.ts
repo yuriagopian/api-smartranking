@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Player } from 'src/players/schema/players.schema';
 import { Match } from './match.schema';
 
@@ -25,11 +25,21 @@ export class Challenge {
   @Prop()
   category: string;
 
-  @Prop()
-  players: Array<Player>;
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: Player.name }],
+  })
+  players: mongoose.Types.ObjectId[];
 
-  @Prop()
-  matches: Match;
+  // @Prop()
+  // players: Array<Player>;
+
+  // @Prop()
+  // matches: Match;
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: Player.name }],
+  })
+  matches: mongoose.Types.ObjectId[];
 }
 
 export const challengeSchema = SchemaFactory.createForClass(Challenge);
