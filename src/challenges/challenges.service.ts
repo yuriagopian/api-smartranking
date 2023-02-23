@@ -10,6 +10,7 @@ import { Model } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
 import { UpdatePlayerDto } from 'src/players/dtos/update-player.dto';
 import { PlayersService } from 'src/players/players.service';
+import { AssignChallengeToMatchDto } from './dtos/assign-challenge-to-match.dto';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
 import { ChallengeStatus } from './interfaces/challenge-status.enum';
 import { Challenge } from './schemas/challenge.schema';
@@ -138,7 +139,7 @@ export class ChallengesService {
 
   async atribuirDesafioPartida(
     _id: string,
-    atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
+    assignChallengeToMatchDto: AssignChallengeToMatchDto,
   ): Promise<void> {
     const desafioEncontrado = await this.challengeModel.findById(_id).exec();
 
@@ -150,7 +151,7 @@ export class ChallengesService {
         Verificar se o player vencedor faz parte do desafio
         */
     const playerFilter = desafioEncontrado.players.filter(
-      (player) => player._id == atribuirDesafioPartidaDto.def,
+      (player) => player._id == assignChallengeToMatchDto.def,
     );
 
     this.logger.log(`desafioEncontrado: ${desafioEncontrado}`);
@@ -165,7 +166,7 @@ export class ChallengesService {
     /*
         Primeiro vamos criar e persistir o objeto partida
         */
-    const partidaCriada = new this.matchModel(atribuirDesafioPartidaDto);
+    const partidaCriada = new this.matchModel(assignChallengeToMatchDto);
 
     /*
        Atribuir ao objeto partida a categoria recuperada no desafio
