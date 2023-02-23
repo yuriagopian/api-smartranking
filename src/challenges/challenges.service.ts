@@ -137,7 +137,7 @@ export class ChallengesService {
     }
 
     const playerFilter = challengeFound.players.filter(
-      (player) => player._id == assignChallengeToMatchDto.def,
+      (player) => String(player._id) == assignChallengeToMatchDto.def,
     );
 
     this.logger.log(`challengeFound: ${challengeFound}`);

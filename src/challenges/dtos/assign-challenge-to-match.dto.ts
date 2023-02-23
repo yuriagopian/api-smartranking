@@ -4,7 +4,7 @@ import { Result } from '../interfaces/challenge.interface';
 
 export class AssignChallengeToMatchDto {
   @IsNotEmpty()
-  def: Player;
+  def: string;
 
   @IsNotEmpty()
   result: Array<Result>;
