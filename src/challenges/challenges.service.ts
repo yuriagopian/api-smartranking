@@ -213,7 +213,7 @@ export class ChallengesService {
         Realizaremos a deleção lógica do desafio, modificando seu status para
         CANCELADO
         */
-    desafioEncontrado.status = ChallengeStatus.CANCELADO;
+    desafioEncontrado.status = ChallengeStatus.CANCELED;
 
     await this.challengeModel
       .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
