@@ -42,40 +42,28 @@ export class ChallengesService {
       }
     });
 
-    const solicitanteEhplayerDaPartida =
-      await createChallengeDto.players.filter(
-        (player) => player._id == createChallengeDto.requesters,
-      );
-
-    this.logger.log(
-      `solicitanteEhplayerDaPartida: ${solicitanteEhplayerDaPartida}`,
+    const requesterIsAMatchPlayer = await createChallengeDto.players.filter(
+      (player) => player._id == createChallengeDto.requester,
     );
 
-    if (solicitanteEhplayerDaPartida.length == 0) {
-      throw new BadRequestException(
-        `O solicitante deve ser um player da partida!`,
-      );
+    this.logger.log(`requesterIsAMatchPlayer: ${requesterIsAMatchPlayer}`);
+
+    if (requesterIsAMatchPlayer.length == 0) {
+      throw new BadRequestException(`The requester must be a match player!`);
     }
 
-    /*
-        Descobrimos a categoria com base no ID do player solicitante
-        */
-    const categoriaDoplayer =
-      await this.categoriesService.consultarCategoriaDoplayer(
-        createChallengeDto.requesters,
-      );
+    const playerCategory = await this.categoriesService.consultarplayerCategory(
+      createChallengeDto.requester,
+    );
 
-    /*
-        Para prosseguir o solicitante deve fazer parte de uma categoria
-        */
-    if (!categoriaDoplayer) {
+    if (!playerCategory) {
       throw new BadRequestException(
         `O solicitante precisa estar registrado em uma categoria!`,
       );
     }
 
     const challengeCreated = new this.challengeModel(createChallengeDto);
-    challengeCreated.category = categoriaDoplayer.categoria;
+    challengeCreated.category = playerCategory.categoria;
     challengeCreated.dateTimeRequest = new Date();
     /*
         Quando um desafio for criado, definimos o status desafio como pendente

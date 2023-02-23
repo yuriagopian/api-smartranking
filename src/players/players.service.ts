@@ -20,7 +20,7 @@ export class PlayersService {
     private readonly playersModel: Model<IPlayer>,
   ) {}
 
-  async listPlayers(): Promise<IPlayer[]> {
+  async listPlayers(): Promise<Player[]> {
     return this.playersModel.find();
   }
 

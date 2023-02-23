@@ -13,7 +13,7 @@ export class CreateChallengeDto {
   dateTimeChallenge: Date;
 
   @IsNotEmpty()
-  requesters: Player;
+  requester: Player;
 
   @IsArray()
   @ArrayMinSize(2)
