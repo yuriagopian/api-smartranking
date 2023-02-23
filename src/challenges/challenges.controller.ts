@@ -11,7 +11,9 @@ import {
   Delete,
   Logger,
 } from '@nestjs/common';
+import { AssignChallengeToMatchDto } from './dtos/assign-challenge-to-match.dto';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
+import { UpdateChallengeDto } from './dtos/update-challenge.dto';
 import { ChallengeStatusValidationPipe } from './pipes/challenge-status-validation.pipe';
 import { Challenge } from './schemas/challenge.schema';
 
@@ -45,17 +47,17 @@ export class ChallengesController {
   async updateChallenge(
     @Body(ChallengeStatusValidationPipe)
     updateChallengeDto: UpdateChallengeDto,
-    @Param('desafio') _id: string,
+    @Param('id') _id: string,
   ): Promise<void> {
-    await this.desafiosService.atualizarDesafio(_id, atualizarDesafioDto);
+    await this.challengesService.updateChallenge(_id, updateChallengeDto);
   }
 
-  @Post('/:desafio/partida/')
-  async atribuirDesafioPartida(
-    @Body(ValidationPipe) atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
-    @Param('desafio') _id: string,
+  @Post('/:id/match/')
+  async assignChallengeToMatch(
+    @Body(ValidationPipe) assignChallengeToMatchDto: AssignChallengeToMatchDto,
+    @Param('id') _id: string,
   ): Promise<void> {
-    return await this.desafiosService.atribuirDesafioPartida(
+    return await this.challengesService.atribuirDesafioPartida(
       _id,
       atribuirDesafioPartidaDto,
     );
@@ -63,6 +65,6 @@ export class ChallengesController {
 
   @Delete('/:_id')
   async deletarDesafio(@Param('_id') _id: string): Promise<void> {
-    await this.desafiosService.deletarDesafio(_id);
+    await this.challengesService.deletarDesafio(_id);
   }
 }
