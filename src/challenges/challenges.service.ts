@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
 import { PlayersService } from 'src/players/players.service';
+import { CreateChallengeDto } from './dtos/create-challenge.dto';
 import { Challenge } from './schemas/challenge.schema';
 import { Match } from './schemas/match.schema';
 
@@ -23,15 +24,13 @@ export class ChallengesService {
 
   private readonly logger = new Logger(ChallengesService.name);
 
-  async criarDesafio(criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
-    /*
-        Verificar se os jogadores informados estão cadastrados
-        */
+  async createChallenge(
+    createChallengeDto: CreateChallengeDto,
+  ): Promise<Challenge> {
+    const players = await this.playersService.consultarTodosplayers();
 
-    const jogadores = await this.playersService.consultarTodosJogadores();
-
-    criarDesafioDto.jogadores.map((jogadorDto) => {
-      const jogadorFilter = jogadores.filter(
+    createChallengeDto.players.map((jogadorDto) => {
+      const jogadorFilter = players.filter(
         (jogador) => jogador._id == jogadorDto._id,
       );
 
@@ -42,13 +41,9 @@ export class ChallengesService {
       }
     });
 
-    /*
-        Verificar se o solicitante é um dos jogadores da partida
-        */
-
     const solicitanteEhJogadorDaPartida =
-      await criarDesafioDto.jogadores.filter(
-        (jogador) => jogador._id == criarDesafioDto.solicitante,
+      await createChallengeDto.players.filter(
+        (jogador) => jogador._id == createChallengeDto.solicitante,
       );
 
     this.logger.log(
@@ -66,7 +61,7 @@ export class ChallengesService {
         */
     const categoriaDoJogador =
       await this.categoriesService.consultarCategoriaDoJogador(
-        criarDesafioDto.solicitante,
+        createChallengeDto.solicitante,
       );
 
     /*
@@ -78,7 +73,7 @@ export class ChallengesService {
       );
     }
 
-    const desafioCriado = new this.challengeModel(criarDesafioDto);
+    const desafioCriado = new this.challengeModel(createChallengeDto);
     desafioCriado.categoria = categoriaDoJogador.categoria;
     desafioCriado.dataHoraSolicitacao = new Date();
     /*
@@ -93,15 +88,15 @@ export class ChallengesService {
     return await this.challengeModel
       .find()
       .populate('solicitante')
-      .populate('jogadores')
+      .populate('players')
       .populate('partida')
       .exec();
   }
 
   async consultarDesafiosDeUmJogador(_id: any): Promise<Array<Desafio>> {
-    const jogadores = await this.playersService.consultarTodosJogadores();
+    const players = await this.playersService.consultarTodosplayers();
 
-    const jogadorFilter = jogadores.filter((jogador) => jogador._id == _id);
+    const jogadorFilter = players.filter((jogador) => jogador._id == _id);
 
     if (jogadorFilter.length == 0) {
       throw new BadRequestException(`O id ${_id} não é um jogador!`);
@@ -109,10 +104,10 @@ export class ChallengesService {
 
     return await this.challengeModel
       .find()
-      .where('jogadores')
+      .where('players')
       .in(_id)
       .populate('solicitante')
-      .populate('jogadores')
+      .populate('players')
       .populate('partida')
       .exec();
   }
@@ -154,7 +149,7 @@ export class ChallengesService {
     /*
         Verificar se o jogador vencedor faz parte do desafio
         */
-    const jogadorFilter = desafioEncontrado.jogadores.filter(
+    const jogadorFilter = desafioEncontrado.players.filter(
       (jogador) => jogador._id == atribuirDesafioPartidaDto.def,
     );
 
@@ -178,9 +173,9 @@ export class ChallengesService {
     partidaCriada.categoria = desafioEncontrado.categoria;
 
     /*
-       Atribuir ao objeto partida os jogadores que fizeram parte do desafio
+       Atribuir ao objeto partida os players que fizeram parte do desafio
        */
-    partidaCriada.jogadores = desafioEncontrado.jogadores;
+    partidaCriada.players = desafioEncontrado.players;
 
     const resultado = await partidaCriada.save();
 
