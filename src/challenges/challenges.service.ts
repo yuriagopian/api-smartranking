@@ -117,9 +117,9 @@ export class ChallengesService {
     _id: string,
     updatePlayerDto: UpdatePlayerDto,
   ): Promise<void> {
-    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
+    const challengeFound = await this.challengeModel.findById(_id).exec();
 
-    if (!desafioEncontrado) {
+    if (!challengeFound) {
       throw new NotFoundException(`Desafio ${_id} não cadastrado!`);
     }
 
@@ -127,13 +127,13 @@ export class ChallengesService {
         Atualizaremos a data da resposta quando o status do desafio vier preenchido 
         */
     if (updatePlayerDto.status) {
-      desafioEncontrado.dataHoraResposta = new Date();
+      challengeFound.dateTimeResponse = new Date();
     }
-    desafioEncontrado.status = updatePlayerDto.status;
-    desafioEncontrado.dataHoraDesafio = updatePlayerDto.dataHoraDesafio;
+    challengeFound.status = updatePlayerDto.status;
+    challengeFound.dateTimeChallenge = updatePlayerDto.dataHoraDesafio;
 
     await this.challengeModel
-      .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
+      .findOneAndUpdate({ _id }, { $set: challengeFound })
       .exec();
   }
 
@@ -141,17 +141,17 @@ export class ChallengesService {
     _id: string,
     assignChallengeToMatchDto: AssignChallengeToMatchDto,
   ): Promise<void> {
-    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
+    const challengeFound = await this.challengeModel.findById(_id).exec();
 
-    if (!desafioEncontrado) {
+    if (!challengeFound) {
       throw new BadRequestException(`Desafio ${_id} não cadastrado!`);
     }
 
-    const playerFilter = desafioEncontrado.players.filter(
+    const playerFilter = challengeFound.players.filter(
       (player) => player._id == assignChallengeToMatchDto.def,
     );
 
-    this.logger.log(`desafioEncontrado: ${desafioEncontrado}`);
+    this.logger.log(`challengeFound: ${challengeFound}`);
     this.logger.log(`playerFilter: ${playerFilter}`);
 
     if (playerFilter.length == 0) {
@@ -163,34 +163,34 @@ export class ChallengesService {
     /*
         Primeiro vamos criar e persistir o objeto partida
         */
-    const partidaCriada = new this.matchModel(assignChallengeToMatchDto);
+    const matchCreated = new this.matchModel(assignChallengeToMatchDto);
 
     /*
        Atribuir ao objeto partida a categoria recuperada no desafio
        */
-    partidaCriada.categoria = desafioEncontrado.categoria;
+    matchCreated.categora = challengeFound.categoria;
 
     /*
        Atribuir ao objeto partida os players que fizeram parte do desafio
        */
-    partidaCriada.players = desafioEncontrado.players;
+    matchCreated.players = challengeFound.players;
 
-    const resultado = await partidaCriada.save();
+    const resultado = await matchCreated.save();
 
     /*
         Quando uma partida for registrada por um usuário, mudaremos o 
         status do desafio para .DONE
         */
-    desafioEncontrado.status = ChallengeStatus.DONE;
+    challengeFound.status = ChallengeStatus.DONE;
 
     /*  
         Recuperamos o ID da partida e atribuimos ao desafio
         */
-    desafioEncontrado.partida = resultado._id;
+    challengeFound.partida = resultado._id;
 
     try {
       await this.challengeModel
-        .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
+        .findOneAndUpdate({ _id }, { $set: challengeFound })
         .exec();
     } catch (error) {
       /*
@@ -202,10 +202,10 @@ export class ChallengesService {
     }
   }
 
-  async deletarDesafio(_id: string): Promise<void> {
-    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
+  async deleteChallenge(_id: string): Promise<void> {
+    const challengeFound = await this.challengeModel.findById(_id).exec();
 
-    if (!desafioEncontrado) {
+    if (!challengeFound) {
       throw new BadRequestException(`Desafio ${_id} não cadastrado!`);
     }
 
@@ -213,10 +213,10 @@ export class ChallengesService {
         Realizaremos a deleção lógica do desafio, modificando seu status para
         CANCELADO
         */
-    desafioEncontrado.status = ChallengeStatus.CANCELED;
+    challengeFound.status = ChallengeStatus.CANCELED;
 
     await this.challengeModel
-      .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
+      .findOneAndUpdate({ _id }, { $set: challengeFound })
       .exec();
   }
 }
