@@ -59,7 +59,7 @@ export class ChallengesController {
   ): Promise<void> {
     return await this.challengesService.atribuirDesafioPartida(
       _id,
-      atribuirDesafioPartidaDto,
+      assignChallengeToMatchDto,
     );
   }
 

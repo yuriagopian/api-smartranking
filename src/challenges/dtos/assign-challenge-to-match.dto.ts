@@ -7,5 +7,5 @@ export class AssignChallengeToMatchDto {
   def: Player;
 
   @IsNotEmpty()
-  resultado: Array<Result>;
+  result: Array<Result>;
 }
