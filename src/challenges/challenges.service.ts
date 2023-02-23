@@ -8,10 +8,11 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
-import { UpdatePlayerDto } from 'src/players/dtos/update-player.dto';
+import { updateChallengeDto } from 'src/players/dtos/update-player.dto';
 import { PlayersService } from 'src/players/players.service';
 import { AssignChallengeToMatchDto } from './dtos/assign-challenge-to-match.dto';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
+import { UpdateChallengeDto } from './dtos/update-challenge.dto';
 import { ChallengeStatus } from './interfaces/challenge-status.enum';
 import { Challenge } from './schemas/challenge.schema';
 import { Match } from './schemas/match.schema';
@@ -115,7 +116,7 @@ export class ChallengesService {
 
   async updateChallenge(
     _id: string,
-    updatePlayerDto: UpdatePlayerDto,
+    updateChallengeDto: UpdateChallengeDto,
   ): Promise<void> {
     const challengeFound = await this.challengeModel.findById(_id).exec();
 
@@ -126,15 +127,16 @@ export class ChallengesService {
     /*
         Atualizaremos a data da resposta quando o status do desafio vier preenchido 
         */
-    if (updatePlayerDto.status) {
+    if (updateChallengeDto.status) {
       challengeFound.dateTimeResponse = new Date();
     }
-    challengeFound.status = updatePlayerDto.status;
-    challengeFound.dateTimeChallenge = updatePlayerDto.dataHoraDesafio;
+    challengeFound.status = updateChallengeDto.status;
+    challengeFound.dateTimeChallenge = updateChallengeDto.dateTimeChallenge;
 
-    await this.challengeModel
-      .findOneAndUpdate({ _id }, { $set: challengeFound })
-      .exec();
+    await this.challengeModel.findOneAndUpdate(
+      { _id },
+      { $set: challengeFound },
+    );
   }
 
   async atribuirDesafioPartida(
@@ -168,7 +170,7 @@ export class ChallengesService {
     /*
        Atribuir ao objeto partida a categoria recuperada no desafio
        */
-    matchCreated.categora = challengeFound.categoria;
+    matchCreated.category = challengeFound.category;
 
     /*
        Atribuir ao objeto partida os players que fizeram parte do desafio

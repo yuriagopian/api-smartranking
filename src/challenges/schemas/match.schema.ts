@@ -5,7 +5,7 @@ import { Result } from '../interfaces/challenge.interface';
 @Schema({ timestamps: true, collection: 'matches' })
 export class Match {
   @Prop()
-  categoria: string;
+  category: string;
 
   @Prop()
   players: Array<Player>;
