@@ -44,7 +44,7 @@ export class ChallengesService {
 
     const solicitanteEhplayerDaPartida =
       await createChallengeDto.players.filter(
-        (player) => player._id == createChallengeDto.solicitante,
+        (player) => player._id == createChallengeDto.requesters,
       );
 
     this.logger.log(
@@ -62,7 +62,7 @@ export class ChallengesService {
         */
     const categoriaDoplayer =
       await this.categoriesService.consultarCategoriaDoplayer(
-        createChallengeDto.solicitante,
+        createChallengeDto.requesters,
       );
 
     /*
@@ -74,18 +74,18 @@ export class ChallengesService {
       );
     }
 
-    const desafioCriado = new this.challengeModel(createChallengeDto);
-    desafioCriado.categoria = categoriaDoplayer.categoria;
-    desafioCriado.dataHoraSolicitacao = new Date();
+    const challengeCreated = new this.challengeModel(createChallengeDto);
+    challengeCreated.category = categoriaDoplayer.categoria;
+    challengeCreated.dateTimeRequest = new Date();
     /*
         Quando um desafio for criado, definimos o status desafio como pendente
         */
-    desafioCriado.status = ChallengeStatus.PENDING;
-    this.logger.log(`desafioCriado: ${JSON.stringify(desafioCriado)}`);
-    return await desafioCriado.save();
+    challengeCreated.status = ChallengeStatus.PENDING;
+    this.logger.log(`challengeCreated: ${JSON.stringify(challengeCreated)}`);
+    return await challengeCreated.save();
   }
 
-  async consultarTodosDesafios(): Promise<Array<Challenge>> {
+  async listChallenges(): Promise<Array<Challenge>> {
     return await this.challengeModel
       .find()
       .populate('solicitante')
@@ -113,7 +113,7 @@ export class ChallengesService {
       .exec();
   }
 
-  async atualizarDesafio(
+  async updateChallenge(
     _id: string,
     updatePlayerDto: UpdatePlayerDto,
   ): Promise<void> {
