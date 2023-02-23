@@ -147,9 +147,6 @@ export class ChallengesService {
       throw new BadRequestException(`Desafio ${_id} não cadastrado!`);
     }
 
-    /*
-        Verificar se o player vencedor faz parte do desafio
-        */
     const playerFilter = desafioEncontrado.players.filter(
       (player) => player._id == assignChallengeToMatchDto.def,
     );
@@ -182,9 +179,9 @@ export class ChallengesService {
 
     /*
         Quando uma partida for registrada por um usuário, mudaremos o 
-        status do desafio para realizado
+        status do desafio para .DONE
         */
-    desafioEncontrado.status = DesafioStatus.REALIZADO;
+    desafioEncontrado.status = ChallengeStatus.DONE;
 
     /*  
         Recuperamos o ID da partida e atribuimos ao desafio
@@ -216,7 +213,7 @@ export class ChallengesService {
         Realizaremos a deleção lógica do desafio, modificando seu status para
         CANCELADO
         */
-    desafioEncontrado.status = DesafioStatus.CANCELADO;
+    desafioEncontrado.status = ChallengeStatus.CANCELADO;
 
     await this.challengeModel
       .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
