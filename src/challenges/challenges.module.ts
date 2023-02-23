@@ -5,6 +5,7 @@ import { matchSchema } from './schemas/match.schema';
 import { PlayersModule } from '../players/players.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { ChallengesController } from './challenges.controller';
+import { ChallengesService } from './challenges.service';
 
 @Module({
   imports: [
