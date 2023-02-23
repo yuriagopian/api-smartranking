@@ -7,14 +7,18 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CategoriesService } from 'src/categories/categories.service';
+import { PlayersService } from 'src/players/players.service';
+import { Challenge } from './schemas/challenge.schema';
+import { Match } from './schemas/match.schema';
 
 @Injectable()
 export class ChallengesService {
   constructor(
-    @InjectModel('Desafio') private readonly desafioModel: Model<Desafio>,
-    @InjectModel('Partida') private readonly partidaModel: Model<Partida>,
-    private readonly jogadoresService: JogadoresService,
-    private readonly categoriasService: CategoriasService,
+    @InjectModel('Challenge') private readonly challengeModel: Model<Challenge>,
+    @InjectModel('Match') private readonly matchModel: Model<Match>,
+    private readonly playersService: PlayersService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   private readonly logger = new Logger(DesafiosService.name);
@@ -24,7 +28,7 @@ export class ChallengesService {
         Verificar se os jogadores informados estão cadastrados
         */
 
-    const jogadores = await this.jogadoresService.consultarTodosJogadores();
+    const jogadores = await this.playersService.consultarTodosJogadores();
 
     criarDesafioDto.jogadores.map((jogadorDto) => {
       const jogadorFilter = jogadores.filter(
@@ -61,7 +65,7 @@ export class ChallengesService {
         Descobrimos a categoria com base no ID do jogador solicitante
         */
     const categoriaDoJogador =
-      await this.categoriasService.consultarCategoriaDoJogador(
+      await this.categoriesService.consultarCategoriaDoJogador(
         criarDesafioDto.solicitante,
       );
 
@@ -74,7 +78,7 @@ export class ChallengesService {
       );
     }
 
-    const desafioCriado = new this.desafioModel(criarDesafioDto);
+    const desafioCriado = new this.challengeModel(criarDesafioDto);
     desafioCriado.categoria = categoriaDoJogador.categoria;
     desafioCriado.dataHoraSolicitacao = new Date();
     /*
@@ -86,7 +90,7 @@ export class ChallengesService {
   }
 
   async consultarTodosDesafios(): Promise<Array<Desafio>> {
-    return await this.desafioModel
+    return await this.challengeModel
       .find()
       .populate('solicitante')
       .populate('jogadores')
@@ -95,7 +99,7 @@ export class ChallengesService {
   }
 
   async consultarDesafiosDeUmJogador(_id: any): Promise<Array<Desafio>> {
-    const jogadores = await this.jogadoresService.consultarTodosJogadores();
+    const jogadores = await this.playersService.consultarTodosJogadores();
 
     const jogadorFilter = jogadores.filter((jogador) => jogador._id == _id);
 
@@ -103,7 +107,7 @@ export class ChallengesService {
       throw new BadRequestException(`O id ${_id} não é um jogador!`);
     }
 
-    return await this.desafioModel
+    return await this.challengeModel
       .find()
       .where('jogadores')
       .in(_id)
@@ -117,7 +121,7 @@ export class ChallengesService {
     _id: string,
     atualizarDesafioDto: AtualizarDesafioDto,
   ): Promise<void> {
-    const desafioEncontrado = await this.desafioModel.findById(_id).exec();
+    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
 
     if (!desafioEncontrado) {
       throw new NotFoundException(`Desafio ${_id} não cadastrado!`);
@@ -132,7 +136,7 @@ export class ChallengesService {
     desafioEncontrado.status = atualizarDesafioDto.status;
     desafioEncontrado.dataHoraDesafio = atualizarDesafioDto.dataHoraDesafio;
 
-    await this.desafioModel
+    await this.challengeModel
       .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
       .exec();
   }
@@ -141,7 +145,7 @@ export class ChallengesService {
     _id: string,
     atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
   ): Promise<void> {
-    const desafioEncontrado = await this.desafioModel.findById(_id).exec();
+    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
 
     if (!desafioEncontrado) {
       throw new BadRequestException(`Desafio ${_id} não cadastrado!`);
@@ -166,7 +170,7 @@ export class ChallengesService {
     /*
         Primeiro vamos criar e persistir o objeto partida
         */
-    const partidaCriada = new this.partidaModel(atribuirDesafioPartidaDto);
+    const partidaCriada = new this.matchModel(atribuirDesafioPartidaDto);
 
     /*
        Atribuir ao objeto partida a categoria recuperada no desafio
@@ -192,7 +196,7 @@ export class ChallengesService {
     desafioEncontrado.partida = resultado._id;
 
     try {
-      await this.desafioModel
+      await this.challengeModel
         .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
         .exec();
     } catch (error) {
@@ -200,13 +204,13 @@ export class ChallengesService {
             Se a atualização do desafio falhar excluímos a partida 
             gravada anteriormente
             */
-      await this.partidaModel.deleteOne({ _id: resultado._id }).exec();
+      await this.matchModel.deleteOne({ _id: resultado._id }).exec();
       throw new InternalServerErrorException();
     }
   }
 
   async deletarDesafio(_id: string): Promise<void> {
-    const desafioEncontrado = await this.desafioModel.findById(_id).exec();
+    const desafioEncontrado = await this.challengeModel.findById(_id).exec();
 
     if (!desafioEncontrado) {
       throw new BadRequestException(`Desafio ${_id} não cadastrado!`);
@@ -218,7 +222,7 @@ export class ChallengesService {
         */
     desafioEncontrado.status = DesafioStatus.CANCELADO;
 
-    await this.desafioModel
+    await this.challengeModel
       .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
       .exec();
   }
