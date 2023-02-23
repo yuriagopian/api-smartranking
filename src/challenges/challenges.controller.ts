@@ -36,12 +36,12 @@ export class ChallengesController {
     @Query('playerId') _id: string,
   ): Promise<Array<Challenge>> {
     return _id
-      ? await this.desafiosService.consultarDesafiosDeUmJogador(_id)
-      : await this.desafiosService.consultarTodosDesafios();
+      ? await this.challengesService.getChallengeByPlayerId(_id)
+      : await this.challengesService.listChallenges();
   }
 
-  @Put('/:desafio')
-  async atualizarDesafio(
+  @Put('/:id')
+  async updateChallenge(
     @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto,
     @Param('desafio') _id: string,
   ): Promise<void> {
