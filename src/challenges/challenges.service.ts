@@ -8,7 +8,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
-import { updateChallengeDto } from 'src/players/dtos/update-player.dto';
 import { PlayersService } from 'src/players/players.service';
 import { AssignChallengeToMatchDto } from './dtos/assign-challenge-to-match.dto';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
