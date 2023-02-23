@@ -175,7 +175,7 @@ export class ChallengesService {
     /*  
         Recuperamos o ID da partida e atribuimos ao desafio
         */
-    challengeFound.matches = resultado._id;
+    challengeFound.match = resultado._id;
 
     try {
       await this.challengeModel
