@@ -8,8 +8,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
+import { UpdatePlayerDto } from 'src/players/dtos/update-player.dto';
 import { PlayersService } from 'src/players/players.service';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
+import { ChallengeStatus } from './interfaces/challenge-status.enum';
 import { Challenge } from './schemas/challenge.schema';
 import { Match } from './schemas/match.schema';
 
@@ -27,64 +29,62 @@ export class ChallengesService {
   async createChallenge(
     createChallengeDto: CreateChallengeDto,
   ): Promise<Challenge> {
-    const players = await this.playersService.consultarTodosplayers();
+    const players = await this.playersService.listPlayers();
 
-    createChallengeDto.players.map((jogadorDto) => {
-      const jogadorFilter = players.filter(
-        (jogador) => jogador._id == jogadorDto._id,
+    createChallengeDto.players.map((playerDto) => {
+      const playerFilter = players.filter(
+        (player) => player._id == playerDto._id,
       );
 
-      if (jogadorFilter.length == 0) {
-        throw new BadRequestException(
-          `O id ${jogadorDto._id} não é um jogador!`,
-        );
+      if (playerFilter.length == 0) {
+        throw new BadRequestException(`O id ${playerDto._id} não é um player!`);
       }
     });
 
-    const solicitanteEhJogadorDaPartida =
+    const solicitanteEhplayerDaPartida =
       await createChallengeDto.players.filter(
-        (jogador) => jogador._id == createChallengeDto.solicitante,
+        (player) => player._id == createChallengeDto.solicitante,
       );
 
     this.logger.log(
-      `solicitanteEhJogadorDaPartida: ${solicitanteEhJogadorDaPartida}`,
+      `solicitanteEhplayerDaPartida: ${solicitanteEhplayerDaPartida}`,
     );
 
-    if (solicitanteEhJogadorDaPartida.length == 0) {
+    if (solicitanteEhplayerDaPartida.length == 0) {
       throw new BadRequestException(
-        `O solicitante deve ser um jogador da partida!`,
+        `O solicitante deve ser um player da partida!`,
       );
     }
 
     /*
-        Descobrimos a categoria com base no ID do jogador solicitante
+        Descobrimos a categoria com base no ID do player solicitante
         */
-    const categoriaDoJogador =
-      await this.categoriesService.consultarCategoriaDoJogador(
+    const categoriaDoplayer =
+      await this.categoriesService.consultarCategoriaDoplayer(
         createChallengeDto.solicitante,
       );
 
     /*
         Para prosseguir o solicitante deve fazer parte de uma categoria
         */
-    if (!categoriaDoJogador) {
+    if (!categoriaDoplayer) {
       throw new BadRequestException(
         `O solicitante precisa estar registrado em uma categoria!`,
       );
     }
 
     const desafioCriado = new this.challengeModel(createChallengeDto);
-    desafioCriado.categoria = categoriaDoJogador.categoria;
+    desafioCriado.categoria = categoriaDoplayer.categoria;
     desafioCriado.dataHoraSolicitacao = new Date();
     /*
         Quando um desafio for criado, definimos o status desafio como pendente
         */
-    desafioCriado.status = DesafioStatus.PENDENTE;
+    desafioCriado.status = ChallengeStatus.PENDING;
     this.logger.log(`desafioCriado: ${JSON.stringify(desafioCriado)}`);
     return await desafioCriado.save();
   }
 
-  async consultarTodosDesafios(): Promise<Array<Desafio>> {
+  async consultarTodosDesafios(): Promise<Array<Challenge>> {
     return await this.challengeModel
       .find()
       .populate('solicitante')
@@ -93,13 +93,13 @@ export class ChallengesService {
       .exec();
   }
 
-  async consultarDesafiosDeUmJogador(_id: any): Promise<Array<Desafio>> {
+  async consultarDesafiosDeUmplayer(_id: any): Promise<Array<Challenge>> {
     const players = await this.playersService.consultarTodosplayers();
 
-    const jogadorFilter = players.filter((jogador) => jogador._id == _id);
+    const playerFilter = players.filter((player) => player._id == _id);
 
-    if (jogadorFilter.length == 0) {
-      throw new BadRequestException(`O id ${_id} não é um jogador!`);
+    if (playerFilter.length == 0) {
+      throw new BadRequestException(`O id ${_id} não é um player!`);
     }
 
     return await this.challengeModel
@@ -114,7 +114,7 @@ export class ChallengesService {
 
   async atualizarDesafio(
     _id: string,
-    atualizarDesafioDto: AtualizarDesafioDto,
+    updatePlayerDto: UpdatePlayerDto,
   ): Promise<void> {
     const desafioEncontrado = await this.challengeModel.findById(_id).exec();
 
@@ -125,11 +125,11 @@ export class ChallengesService {
     /*
         Atualizaremos a data da resposta quando o status do desafio vier preenchido 
         */
-    if (atualizarDesafioDto.status) {
+    if (updatePlayerDto.status) {
       desafioEncontrado.dataHoraResposta = new Date();
     }
-    desafioEncontrado.status = atualizarDesafioDto.status;
-    desafioEncontrado.dataHoraDesafio = atualizarDesafioDto.dataHoraDesafio;
+    desafioEncontrado.status = updatePlayerDto.status;
+    desafioEncontrado.dataHoraDesafio = updatePlayerDto.dataHoraDesafio;
 
     await this.challengeModel
       .findOneAndUpdate({ _id }, { $set: desafioEncontrado })
@@ -147,18 +147,18 @@ export class ChallengesService {
     }
 
     /*
-        Verificar se o jogador vencedor faz parte do desafio
+        Verificar se o player vencedor faz parte do desafio
         */
-    const jogadorFilter = desafioEncontrado.players.filter(
-      (jogador) => jogador._id == atribuirDesafioPartidaDto.def,
+    const playerFilter = desafioEncontrado.players.filter(
+      (player) => player._id == atribuirDesafioPartidaDto.def,
     );
 
     this.logger.log(`desafioEncontrado: ${desafioEncontrado}`);
-    this.logger.log(`jogadorFilter: ${jogadorFilter}`);
+    this.logger.log(`playerFilter: ${playerFilter}`);
 
-    if (jogadorFilter.length == 0) {
+    if (playerFilter.length == 0) {
       throw new BadRequestException(
-        `O jogador vencedor não faz parte do desafio!`,
+        `O player vencedor não faz parte do desafio!`,
       );
     }
 
