@@ -21,7 +21,7 @@ export class ChallengesService {
     private readonly categoriesService: CategoriesService,
   ) {}
 
-  private readonly logger = new Logger(DesafiosService.name);
+  private readonly logger = new Logger(ChallengesService.name);
 
   async criarDesafio(criarDesafioDto: CriarDesafioDto): Promise<Desafio> {
     /*
