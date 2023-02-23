@@ -12,6 +12,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CreateChallengeDto } from './dtos/create-challenge.dto';
+import { ChallengeStatusValidationPipe } from './pipes/challenge-status-validation.pipe';
 import { Challenge } from './schemas/challenge.schema';
 
 @Controller('api/v1/challenges')
@@ -42,7 +43,8 @@ export class ChallengesController {
 
   @Put('/:id')
   async updateChallenge(
-    @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto,
+    @Body(ChallengeStatusValidationPipe)
+    updateChallengeDto: UpdateChallengeDto,
     @Param('desafio') _id: string,
   ): Promise<void> {
     await this.desafiosService.atualizarDesafio(_id, atualizarDesafioDto);
