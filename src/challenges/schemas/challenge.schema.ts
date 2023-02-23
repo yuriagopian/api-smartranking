@@ -37,9 +37,9 @@ export class Challenge {
   // matches: Match;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: Match.name }],
+    type: { type: mongoose.Schema.Types.ObjectId, ref: Match.name },
   })
-  matches: mongoose.Types.ObjectId[];
+  match: mongoose.Types.ObjectId;
 }
 
 export const challengeSchema = SchemaFactory.createForClass(Challenge);
