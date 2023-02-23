@@ -11,6 +11,8 @@ import {
   Delete,
   Logger,
 } from '@nestjs/common';
+import { CreateChallengeDto } from './dtos/create-challenge.dto';
+import { Challenge } from './schemas/challenge.schema';
 
 @Controller('api/v1/challenges')
 export class ChallengesController {
@@ -21,16 +23,18 @@ export class ChallengesController {
   @Post()
   @UsePipes(ValidationPipe)
   async createChallenge(
-    @Body() criarDesafioDto: CriarDesafioDto,
-  ): Promise<Desafio> {
-    this.logger.log(`criarDesafioDto: ${JSON.stringify(criarDesafioDto)}`);
-    return await this.desafiosService.criarDesafio(criarDesafioDto);
+    @Body() createChallengeDto: CreateChallengeDto,
+  ): Promise<Challenge> {
+    this.logger.log(
+      `createChallengeDto: ${JSON.stringify(createChallengeDto)}`,
+    );
+    return await this.challengesService.createChallenge(createChallengeDto);
   }
 
   @Get()
-  async consultarDesafios(
-    @Query('idJogador') _id: string,
-  ): Promise<Array<Desafio>> {
+  async listChallenges(
+    @Query('playerId') _id: string,
+  ): Promise<Array<Challenge>> {
     return _id
       ? await this.desafiosService.consultarDesafiosDeUmJogador(_id)
       : await this.desafiosService.consultarTodosDesafios();
