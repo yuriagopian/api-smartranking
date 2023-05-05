@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Player, PlayerDocument } from './schema/players.schema';
 
 @Injectable()
 export class PlayersService {
@@ -20,11 +21,11 @@ export class PlayersService {
     private readonly playersModel: Model<IPlayer>,
   ) {}
 
-  async listPlayers(): Promise<Player[]> {
+  async listPlayers(): Promise<PlayerDocument[]> {
     return this.playersModel.find();
   }
 
-  async getPlayerByEmail(email: string): Promise<IPlayer> {
+  async getPlayerByEmail(email: string): Promise<Player> {
     const player = this.playersModel.findOne({ email });
 
     if (!player) {

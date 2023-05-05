@@ -99,4 +99,16 @@ export class CategoriesService {
   }
 
   async deleteCategory(id: number): Promise<void> {}
+
+  async getPlayerCategory(playerId: any): Promise<CategoryDocument> {
+    const players = await this.playersService.listPlayers();
+
+    const playerFilter = players.filter((player) => player._id == playerId);
+
+    if (playerFilter.length == 0) {
+      throw new BadRequestException(`The id ${playerId} is not a player!`);
+    }
+
+    return await this.categoriesModel.findOne().where('players').in(playerId);
+  }
 }

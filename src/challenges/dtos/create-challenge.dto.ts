@@ -5,7 +5,7 @@ import {
   ArrayMaxSize,
   IsDateString,
 } from 'class-validator';
-import { Player } from 'src/players/schema/players.schema';
+import { Player, PlayerDocument } from 'src/players/schema/players.schema';
 
 export class CreateChallengeDto {
   @IsNotEmpty()
@@ -13,10 +13,10 @@ export class CreateChallengeDto {
   dateTimeChallenge: Date;
 
   @IsNotEmpty()
-  requester: Player;
+  requester: PlayerDocument;
 
   @IsArray()
   @ArrayMinSize(2)
   @ArrayMaxSize(2)
-  players: Array<Player>;
+  players: Array<PlayerDocument>;
 }

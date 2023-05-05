@@ -16,6 +16,7 @@ import { CreateChallengeDto } from './dtos/create-challenge.dto';
 import { UpdateChallengeDto } from './dtos/update-challenge.dto';
 import { ChallengeStatusValidationPipe } from './pipes/challenge-status-validation.pipe';
 import { Challenge } from './schemas/challenge.schema';
+import { ChallengesService } from './challenges.service';
 
 @Controller('api/v1/challenges')
 export class ChallengesController {
@@ -39,7 +40,7 @@ export class ChallengesController {
     @Query('playerId') _id: string,
   ): Promise<Array<Challenge>> {
     return _id
-      ? await this.challengesService.getChallengeByPlayerId(_id)
+      ? await this.challengesService.getChallengesByPlayer(_id)
       : await this.challengesService.listChallenges();
   }
 
@@ -57,7 +58,7 @@ export class ChallengesController {
     @Body(ValidationPipe) assignChallengeToMatchDto: AssignChallengeToMatchDto,
     @Param('id') _id: string,
   ): Promise<void> {
-    return await this.challengesService.atribuirDesafioPartida(
+    return await this.challengesService.assignChallengeToMatch(
       _id,
       assignChallengeToMatchDto,
     );

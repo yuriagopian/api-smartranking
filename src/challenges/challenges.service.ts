@@ -38,12 +38,14 @@ export class ChallengesService {
       );
 
       if (playerFilter.length == 0) {
-        throw new BadRequestException(`O id ${playerDto._id} não é um player!`);
+        throw new BadRequestException(
+          `The id ${playerDto._id} is not a player!`,
+        );
       }
     });
 
     const requesterIsAMatchPlayer = await createChallengeDto.players.filter(
-      (player) => player._id == createChallengeDto.requester,
+      (player) => player._id == createChallengeDto.requester._id,
     );
 
     this.logger.log(`requesterIsAMatchPlayer: ${requesterIsAMatchPlayer}`);
@@ -52,7 +54,7 @@ export class ChallengesService {
       throw new BadRequestException(`The requester must be a match player!`);
     }
 
-    const playerCategory = await this.categoriesService.consultarplayerCategory(
+    const playerCategory = await this.categoriesService.getPlayerCategory(
       createChallengeDto.requester,
     );
 
@@ -63,7 +65,7 @@ export class ChallengesService {
     }
 
     const challengeCreated = new this.challengeModel(createChallengeDto);
-    challengeCreated.category = playerCategory.categoria;
+    challengeCreated.category = playerCategory.category;
     challengeCreated.dateTimeRequest = new Date();
     /*
         Quando um desafio for criado, definimos o status desafio como pendente
@@ -82,8 +84,8 @@ export class ChallengesService {
       .exec();
   }
 
-  async consultarDesafiosDeUmplayer(_id: any): Promise<Array<Challenge>> {
-    const players = await this.playersService.consultarTodosplayers();
+  async getChallengesByPlayer(_id: any): Promise<Array<Challenge>> {
+    const players = await this.playersService.listPlayers();
 
     const playerFilter = players.filter((player) => player._id == _id);
 
@@ -126,7 +128,7 @@ export class ChallengesService {
     );
   }
 
-  async atribuirDesafioPartida(
+  async assignChallengeToMatch(
     _id: string,
     assignChallengeToMatchDto: AssignChallengeToMatchDto,
   ): Promise<void> {
