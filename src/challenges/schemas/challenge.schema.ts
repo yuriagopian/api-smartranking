@@ -30,15 +30,7 @@ export class Challenge {
   })
   players: mongoose.Types.ObjectId[];
 
-  // @Prop()
-  // players: Array<Player>;
-
-  // @Prop()
-  // matches: Match;
-
-  @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: Match.name },
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Match.name })
   match: mongoose.Types.ObjectId;
 }
 

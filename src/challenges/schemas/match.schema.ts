@@ -9,21 +9,13 @@ export class Match {
   @Prop()
   category: string;
 
-  // @Prop()
-  // players: Array<Player>;
-
-  // @Prop()
-  // def: Player;
-
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: Player.name }],
   })
   players: mongoose.Types.ObjectId[];
 
-  @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: Player.name },
-  })
-  def: mongoose.Types.ObjectId[];
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Player.name })
+  def: mongoose.Types.ObjectId;
 
   @Prop()
   result: Array<Result>;

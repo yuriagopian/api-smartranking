@@ -139,7 +139,7 @@ export class ChallengesService {
     }
 
     const playerFilter = challengeFound.players.filter(
-      (player) => String(player._id) == assignChallengeToMatchDto.def,
+      (player) => String(player._id) == String(assignChallengeToMatchDto.def),
     );
 
     this.logger.log(`challengeFound: ${challengeFound}`);
@@ -155,7 +155,7 @@ export class ChallengesService {
         Primeiro vamos criar e persistir o objeto partida
         */
     const matchCreated = new this.matchModel(assignChallengeToMatchDto);
-
+    this.logger.log(`match created: ${matchCreated}`);
     /*
        Atribuir ao objeto partida a categoria recuperada no desafio
        */
@@ -180,9 +180,10 @@ export class ChallengesService {
     challengeFound.match = resultado._id;
 
     try {
-      await this.challengeModel
-        .findOneAndUpdate({ _id }, { $set: challengeFound })
-        .exec();
+      await this.challengeModel.findOneAndUpdate(
+        { _id },
+        { $set: challengeFound },
+      );
     } catch (error) {
       /*
             Se a atualização do desafio falhar excluímos a partida 
@@ -206,8 +207,9 @@ export class ChallengesService {
         */
     challengeFound.status = ChallengeStatus.CANCELED;
 
-    await this.challengeModel
-      .findOneAndUpdate({ _id }, { $set: challengeFound })
-      .exec();
+    await this.challengeModel.findOneAndUpdate(
+      { _id },
+      { $set: challengeFound },
+    );
   }
 }
