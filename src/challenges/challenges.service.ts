@@ -97,9 +97,9 @@ export class ChallengesService {
       .find()
       .where('players')
       .in(_id)
-      .populate('solicitante')
+      .populate('requester')
       .populate('players')
-      .populate('partida')
+      .populate('match')
       .exec();
   }
 
