@@ -11,7 +11,7 @@ import { ChallengesService } from './challenges.service';
   imports: [
     MongooseModule.forFeature([
       { name: 'Challenge', schema: challengeSchema },
-      { name: 'Partida', schema: matchSchema },
+      { name: 'Match', schema: matchSchema },
     ]),
     PlayersModule,
     CategoriesModule,
@@ -19,4 +19,4 @@ import { ChallengesService } from './challenges.service';
   controllers: [ChallengesController],
   providers: [ChallengesService],
 })
-export class DesafiosModule {}
+export class ChallengesModule {}

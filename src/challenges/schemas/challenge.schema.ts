@@ -19,8 +19,8 @@ export class Challenge {
   @Prop()
   dateTimeResponse: Date;
 
-  @Prop()
-  requester: Player;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Player.name })
+  requester: mongoose.Types.ObjectId;
 
   @Prop()
   category: string;

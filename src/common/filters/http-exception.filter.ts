@@ -25,7 +25,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getResponse() : exception;
 
     this.logger.error(
-      `Http Status: ${status} Error message: ${JSON.stringify(message)} `,
+      `Http Status: ${statusCode} Error message: ${JSON.stringify(message)} `,
     );
 
     response.status(statusCode).json({

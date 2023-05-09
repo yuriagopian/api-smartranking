@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Player } from 'src/players/schema/players.schema';
 import { Result } from '../interfaces/challenge.interface';
 
+export type MatchDocument = HydratedDocument<Match>;
 @Schema({ timestamps: true, collection: 'matches' })
 export class Match {
   @Prop()

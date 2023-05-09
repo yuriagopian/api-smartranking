@@ -34,7 +34,7 @@ export class ChallengesService {
 
     createChallengeDto.players.map((playerDto) => {
       const playerFilter = players.filter(
-        (player) => player._id == playerDto._id,
+        (player) => String(player._id) === String(playerDto._id),
       );
 
       if (playerFilter.length == 0) {
@@ -45,7 +45,7 @@ export class ChallengesService {
     });
 
     const requesterIsAMatchPlayer = await createChallengeDto.players.filter(
-      (player) => player._id == createChallengeDto.requester._id,
+      (player) => String(player._id) == String(createChallengeDto.requester),
     );
 
     this.logger.log(`requesterIsAMatchPlayer: ${requesterIsAMatchPlayer}`);
@@ -60,7 +60,7 @@ export class ChallengesService {
 
     if (!playerCategory) {
       throw new BadRequestException(
-        `O solicitante precisa estar registrado em uma categoria!`,
+        `The requester must be registered in a category!`,
       );
     }
 
@@ -78,9 +78,9 @@ export class ChallengesService {
   async listChallenges(): Promise<Array<Challenge>> {
     return await this.challengeModel
       .find()
-      .populate('solicitante')
+      .populate('requester')
       .populate('players')
-      .populate('partida')
+      .populate('match')
       .exec();
   }
 
